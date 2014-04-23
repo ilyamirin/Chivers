@@ -21,6 +21,7 @@ public class LJExplorer implements Runnable {
     @Override
     public void run() {
         while (1 == 1) {
+            Thread.sleep(1000);
             Source source = sourceDao.getRandom();
             String profileUrl = String.format("http://users.livejournal.com/%s/profile", source.getName());
             try {

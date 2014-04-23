@@ -10,7 +10,7 @@ public class CrawlerLauncher {
         LJExplorer LJExplorer = new LJExplorer();
         LJExplorer.setSourceDao(sourceDao);
         new Thread(LJExplorer).start();
-        new Thread(LJExplorer).start();
-        new Thread(LJExplorer).start();
+        //new Thread(LJExplorer).start();
+        //new Thread(LJExplorer).start();
     }
 }
