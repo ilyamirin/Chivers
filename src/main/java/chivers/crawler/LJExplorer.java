@@ -11,6 +11,7 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 public class LJExplorer implements Runnable {
@@ -20,11 +21,13 @@ public class LJExplorer implements Runnable {
 
     @Override
     public void run() {
+        Random random = new Random();
         while (1 == 1) {
-            Thread.sleep(1000);
             Source source = sourceDao.getRandom();
             String profileUrl = String.format("http://users.livejournal.com/%s/profile", source.getName());
             try {
+                Thread.sleep(random.nextInt(5) * 1000);
+
                 Document doc = Jsoup.connect(profileUrl).get();
                 String[] splitNames = doc.select(".b-tabs-content").text().split(",\\s?");
                 List<ObjectId> newSourcesIds = new ArrayList<ObjectId>();
@@ -40,7 +43,7 @@ public class LJExplorer implements Runnable {
                     }
                 }
                 sourceDao.addContacts(source, newSourcesIds);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.error("Oops!", e);
                 sourceDao.markAsIncorrect(source);
             }
