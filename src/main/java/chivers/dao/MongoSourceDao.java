@@ -12,11 +12,13 @@ import sun.util.logging.resources.logging;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 public class MongoSourceDao implements SourceDao {
 
     private com.mongodb.DB db;
+    private Random random = new Random();
 
     public void init() {
         try {
@@ -40,6 +42,18 @@ public class MongoSourceDao implements SourceDao {
             result.add(source);
         }
         return result;
+    }
+
+    @Override
+    public Source getRandom() {
+        int randomPosition = random.nextInt((int) db.getCollection("sources").count());
+        DBObject sourceObject = db.getCollection("sources").find().limit(-1).skip(randomPosition).next();
+        Source source = new Source();
+        source.setId((ObjectId) sourceObject.get("_id"));
+        source.setName((String) sourceObject.get("name"));
+        source.setType(Source.Type.valueOf((String) sourceObject.get("type")));
+        source.setLastVisitedAt((Date) sourceObject.get("lastVisitedAt"));
+        return source;
     }
 
     @Override

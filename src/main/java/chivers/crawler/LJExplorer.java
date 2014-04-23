@@ -20,31 +20,30 @@ public class LJExplorer implements Runnable {
 
     @Override
     public void run() {
-        while (1==1) {
-            for (Source source : sourceDao.lastVisited(1)) {
-                String profileUrl = String.format("http://users.livejournal.com/%s/profile", source.getName());
-                try {
-                    Document doc = Jsoup.connect(profileUrl).get();
-                    String[] splitNames = doc.select(".b-tabs-content").text().split(",\\s?");
-                    List<ObjectId> newSourcesIds = new ArrayList<ObjectId>();
-                    for (String name : splitNames) {
-                        Source newSource = new Source();
-                        newSource.setName(name.replaceAll("lj_maintenance", "").replaceAll("…", "").trim()); //WTF? …
-                        newSource.setLastVisitedAt(null);
-                        newSource.setType(Source.Type.LJ);
-                        if (!sourceDao.contains(newSource)) {
-                            newSourcesIds.add(sourceDao.create(newSource));
-                        } else {
-                            newSourcesIds.add(sourceDao.getId(newSource));
-                        }
+        while (1 == 1) {
+            Source source = sourceDao.getRandom();
+            String profileUrl = String.format("http://users.livejournal.com/%s/profile", source.getName());
+            try {
+                Document doc = Jsoup.connect(profileUrl).get();
+                String[] splitNames = doc.select(".b-tabs-content").text().split(",\\s?");
+                List<ObjectId> newSourcesIds = new ArrayList<ObjectId>();
+                for (String name : splitNames) {
+                    Source newSource = new Source();
+                    newSource.setName(name.replaceAll("lj_maintenance", "").replaceAll("…", "").trim()); //WTF? …
+                    newSource.setLastVisitedAt(null);
+                    newSource.setType(Source.Type.LJ);
+                    if (!sourceDao.contains(newSource)) {
+                        newSourcesIds.add(sourceDao.create(newSource));
+                    } else {
+                        newSourcesIds.add(sourceDao.getId(newSource));
                     }
-                    sourceDao.addContacts(source, newSourcesIds);
-                } catch (IOException e) {
-                    log.error("Oops!", e);
-                    sourceDao.markAsIncorrect(source);
                 }
-                sourceDao.updateLastVisitedToCurrent(source);
+                sourceDao.addContacts(source, newSourcesIds);
+            } catch (IOException e) {
+                log.error("Oops!", e);
+                sourceDao.markAsIncorrect(source);
             }
+            sourceDao.updateLastVisitedToCurrent(source);
         }
     }//run
 }

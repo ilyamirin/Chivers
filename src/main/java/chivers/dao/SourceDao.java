@@ -9,6 +9,8 @@ public interface SourceDao {
 
     List<Source> lastVisited(int limit);
 
+    Source getRandom();
+
     boolean contains(Source source);
 
     ObjectId getId(Source source);
