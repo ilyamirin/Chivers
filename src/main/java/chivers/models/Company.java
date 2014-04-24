@@ -11,5 +11,6 @@ public class Company {
 
     private ObjectId id;
     private String name;
+    private Long threshold;
     private Map<String, Integer> words = new HashMap<String, Integer>();
 }
