@@ -17,5 +17,6 @@ public class Source {
     private Type type;
     private String name;
     private Date lastVisitedAt;
+    private Date foundAt;
     private List<ObjectId> contacts;
 }

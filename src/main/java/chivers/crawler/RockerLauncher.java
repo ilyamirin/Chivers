@@ -3,12 +3,12 @@ package chivers.crawler;
 import chivers.dao.MongoSourceDao;
 import chivers.dao.SourceDao;
 
-public class CrawlerLauncher {
+public class RockerLauncher {
 
     public static void main(String... args) {
         SourceDao sourceDao = new MongoSourceDao();
-        LJExplorer LJExplorer = new LJExplorer();
-        LJExplorer.setSourceDao(sourceDao);
-        new Thread(LJExplorer).start();
+        Rocker rocker = new Rocker();
+        //rocker.setSourceDao(sourceDao);
+        new Thread(rocker).start();
     }
 }
